@@ -1,0 +1,51 @@
+# Workflow pour compiler et déployer le portail de la Commune de Labé sur GitHub Pages
+name: Déployer sur GitHub Pages
+
+on:
+  push:
+    branches: ["main", "master"] # Déclenche le déploiement lors d'un push sur main ou master
+
+  # Permet de lancer le déploiement manuellement depuis l'onglet Actions sur GitHub
+  workflow_dispatch:
+
+# Définit les permissions du GITHUB_TOKEN pour permettre le déploiement sur GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permet d'éviter les déploiements concurrents
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Installation des dépendances
+        run: npm install
+
+      - name: Compilation de l'application (Vite Build)
+        run: npm run build
+
+      - name: Téléversement de l'artefact de construction
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist' # Cible le dossier dist généré par Vite
+
+      - name: Déploiement sur GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

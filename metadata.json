@@ -1,0 +1,6 @@
+{
+  "name": "Portail Officiel de Labé",
+  "description": "Portail Officiel de la Commune Urbaine de Labé, République de Guinée. Services municipaux, actualités, projets, investissement et tourisme.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
